@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin login — ParkEase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin-login.css">
+</head>
+<body>
+  <header><div class="nav-inner"><a class="logo" href="index.html"><span class="mark">P</span>ParkEase</a><a href="index.html" class="back-link">Back to home</a></div></header>
+  <main class="login-shell">
+    <div class="form-side">
+      <section class="form-card" aria-labelledby="adminTitle">
+        <div class="eyebrow">ADMIN ACCOUNT</div>
+        <h1 id="adminTitle">Welcome back</h1>
+        <p class="lede">Sign in to manage occupancy, rates, and bookings for your parking zone.</p>
+        <form id="loginForm" novalidate>
+          <div class="field"><label for="adminEmail">Admin Gmail address</label><div class="input-wrap"><input type="email" id="adminEmail" placeholder="admin@gmail.com" autocomplete="username"></div><div class="field-error" id="emailError"></div></div>
+          <div class="field"><div class="label-row"><label for="password">Password</label><a href="#" class="forgot-link" id="forgotLink">Forgot password?</a></div><div class="input-wrap"><input type="password" id="password" placeholder="Enter your password" autocomplete="current-password"><button type="button" class="toggle-visibility" id="toggleVisibility">Show</button></div><div class="field-error" id="passError"></div></div>
+          <label class="remember"><input type="checkbox" id="rememberMe"> Remember this device</label>
+          <button type="submit" class="btn-primary" id="submitBtn">Log in <span>→</span></button>
+          <div class="status-banner" id="statusBanner"></div>
+        </form>
+        <form id="forgotForm" class="forgot-panel" hidden novalidate>
+          <div class="forgot-heading">Reset admin password</div>
+          <p class="forgot-copy">Enter the phone number linked to the admin account. ParkEase support will use it to help recover access.</p>
+          <label for="forgotPhoneInput">Account phone number</label>
+          <div class="phone-input-wrap"><span class="country-code">+977</span><input type="tel" id="forgotPhoneInput" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="10"></div>
+          <div class="field-error" id="forgotPhoneError"></div>
+          <button type="submit" class="btn-primary" id="forgotSubmitBtn">Request reset</button>
+          <div class="status-banner" id="forgotStatusBanner"></div>
+          <button type="button" class="back-to-login" id="backToLoginBtn">Back to login</button>
+        </form>
+        <p class="support-note">Not an admin? <a href="driver-login.html">Go to user login</a></p>
+      </section>
+    </div>
+  </main>
+  <script src="api.js"></script><script src="admin-login.js"></script>
+</body>
+</html>

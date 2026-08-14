@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User account — ParkEase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="driver-login.css">
+</head>
+<body>
+  <header><div class="nav-inner"><a class="logo" href="index.html"><span class="mark">P</span>ParkEase</a><a href="index.html" class="back-link">Back to home</a></div></header>
+  <main class="auth-page">
+    <section class="form-card" aria-labelledby="authTitle">
+      <div class="card-heading"><div class="eyebrow">USER ACCOUNT</div><h1 id="authTitle">Welcome back</h1><p id="authLede">Sign in to find parking, manage bookings, and keep your day moving.</p></div>
+      <div class="mode-tabs" role="tablist" aria-label="Account access"><button type="button" class="mode-tab active" id="loginModeBtn" role="tab" aria-selected="true">Login</button><button type="button" class="mode-tab" id="registerModeBtn" role="tab" aria-selected="false">Register</button></div>
+      <form id="userAuthForm" novalidate>
+        <div class="field" id="registerNameField" hidden><label for="fullNameInput">Full name</label><input class="text-input" type="text" id="fullNameInput" placeholder="Your full name" autocomplete="name"><div class="field-error" id="nameError"></div></div>
+        <div class="field"><label for="emailInput">Gmail address</label><input class="text-input" type="email" id="emailInput" placeholder="you@gmail.com" autocomplete="username"><div class="field-error" id="emailError"></div></div>
+        <div class="field" id="registerPhoneField" hidden><label for="phoneInput">Mobile number for account recovery</label><div class="phone-input-wrap"><span class="country-code">+977</span><input type="tel" id="phoneInput" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="10" autocomplete="tel"></div><div class="field-error" id="phoneError"></div></div>
+        <div class="field"><div class="label-row"><label for="passwordInput">Password</label><a href="#" id="forgotLink">Forgot password?</a></div><div class="password-wrap"><input class="text-input" type="password" id="passwordInput" placeholder="At least 6 characters" autocomplete="current-password"><button type="button" class="toggle-password" id="togglePassword">Show</button></div><div class="field-error" id="passwordError"></div></div>
+        <div class="field" id="confirmPasswordField" hidden><label for="confirmPasswordInput">Confirm password</label><div class="password-wrap"><input class="text-input" type="password" id="confirmPasswordInput" placeholder="Enter your password again" autocomplete="new-password"><button type="button" class="toggle-password" id="toggleConfirmPassword">Show</button></div><div class="field-error" id="confirmPasswordError"></div></div>
+        <button type="submit" class="btn-primary" id="submitBtn">Log in <span>→</span></button>
+        <div class="status-banner" id="statusBanner"></div>
+      </form>
+      <form id="forgotForm" class="forgot-panel" hidden novalidate>
+        <div class="forgot-heading">Reset your password</div>
+        <p class="forgot-copy">Enter the phone number connected to your ParkEase account. Support will use it to help you reset access.</p>
+        <label for="forgotPhoneInput">Account phone number</label>
+        <div class="phone-input-wrap"><span class="country-code">+977</span><input type="tel" id="forgotPhoneInput" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="10"></div>
+        <div class="field-error" id="forgotPhoneError"></div>
+        <button type="submit" class="btn-primary" id="forgotSubmitBtn">Request reset</button>
+        <div class="status-banner" id="forgotStatusBanner"></div>
+        <button type="button" class="back-to-login" id="backToLoginBtn">Back to login</button>
+      </form>
+      <p class="terms-note">By continuing you agree to ParkEase's <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+      <p class="support-note">Managing a parking property? <a href="admin-login.html">Go to admin login</a></p>
+    </section>
+  </main>
+  <script src="api.js"></script><script src="driver-login.js"></script>
+</body>
+</html>

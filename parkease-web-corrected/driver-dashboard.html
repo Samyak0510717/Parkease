@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My account — ParkEase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="driver-dashboard.css">
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <a class="logo" href="index.html"><span class="mark">P</span>ParkEase</a>
+      <div class="header-actions"><span class="account-phone" id="accountPhone"></span><button class="logout-btn" id="logoutBtn">Log out</button></div>
+    </div>
+  </header>
+  <main class="dashboard">
+    <div class="dash-heading"><div><div class="eyebrow">MY PARKEASE</div><h1>Good to see you<span id="accountName"></span>.</h1><p>Find a nearby space and get on with your day.</p></div><a href="booking.html" class="btn-primary">Reserve a spot <span>→</span></a></div>
+    <section class="summary-grid">
+      <div class="summary-card highlight"><span class="summary-label">Open spaces now</span><strong id="openSpaces">—</strong><span class="summary-note">Across live zones</span></div>
+      <div class="summary-card"><span class="summary-label">Live zones</span><strong id="liveZones">—</strong><span class="summary-note">Kathmandu Valley</span></div>
+      <div class="summary-card"><span class="summary-label">Starting from</span><strong id="startingRate">—</strong><span class="summary-note">Per hour</span></div>
+    </section>
+    <section class="dashboard-section"><div class="section-title"><div><div class="eyebrow">LIVE AVAILABILITY</div><h2>Choose a parking zone</h2></div><span class="refresh-label"><i></i> Updates automatically</span></div><div id="zoneGrid" class="zone-grid"><div class="loading">Loading live zones…</div></div></section>
+    <section class="dashboard-section account-section"><div class="section-title"><div><div class="eyebrow">YOUR ACCOUNT</div><h2>Ready when you are</h2></div></div><div class="account-card"><div><strong>Need to park somewhere new?</strong><p>Choose your zone, time, and payment method in one simple flow.</p></div><a href="booking.html" class="btn-secondary">Open booking</a></div></section>
+  </main>
+  <script src="api.js"></script>
+  <script src="driver-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+:root{
+  --green:#1E9E5A;
+  --green-dark:#157A44;
+  --green-tint:#E9F7EF;
+  --ink:#14231C;
+  --ink-soft:#5B6A62;
+  --border:#E4E7E2;
+  --bg:#FFFFFF;
+  --panel:#F6F8F5;
+  --khalti:#5C2D91;
+  --esewa:#2E8B3D;
+  --amber:#E8A33D;
+  --red:#C0392B;
+  --red-tint:#FBECEA;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Manrope', sans-serif; color:var(--ink); background:var(--bg); line-height:1.55;}
+a{text-decoration:none; color:inherit;}
+button{font-family:inherit; cursor:pointer;}
+.wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
+
+header{border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); z-index:50;}
+.nav-inner{max-width:1120px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between;}
+.logo{display:flex; align-items:center; gap:8px; font-weight:800; font-size:20px; color:var(--green-dark);}
+.logo .mark{width:26px; height:26px; border-radius:7px; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800;}
+.back-link{font-size:14px; font-weight:600; color:var(--ink-soft);}
+.back-link:hover{color:var(--green-dark);}
+
+.btn-primary{background:var(--green); color:#fff; border:none; padding:13px 24px; border-radius:8px; font-weight:700; font-size:15px; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 8px 20px rgba(30,158,90,0.25);}
+.btn-primary:hover{background:var(--green-dark);}
+.btn-primary:disabled{background:#A9C9B7; box-shadow:none; cursor:not-allowed;}
+
+.status-banner{margin-top:16px; padding:11px 14px; border-radius:8px; font-size:13px; font-weight:600; display:none; align-items:center; gap:8px;}
+.status-banner.show{display:flex;}
+.status-banner.info{background:var(--green-tint); color:var(--green-dark);}
+.status-banner.error{background:var(--red-tint); color:var(--red);}
+
+footer{border-top:1px solid var(--border); padding:26px 0; font-size:13px; color:var(--ink-soft);}
+.footer-inner{max-width:1120px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
