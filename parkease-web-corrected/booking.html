@@ -3,11 +3,205 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reserve a slot — ParkEase</title>
+<title>Reserve a Parking Slot — ParkEase</title>
+<meta name="description" content="Reserve a parking slot at ParkEase Nepal — choose your zone, pick an available slot, and confirm.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="common.css">
 <link rel="stylesheet" href="booking.css">
+<style>
+  /* ── Step labels ─────────────────────────────────────────────────── */
+  .section-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px;
+  }
+
+  /* ── Slot picker section ─────────────────────────────────────────── */
+  .slot-picker-section {
+    margin-bottom: 28px;
+    animation: fadeSlideIn 0.35s ease;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .slot-picker-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .live-dot {
+    display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; background: var(--green);
+    animation: blink 1.4s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* Legend */
+  .slot-legend {
+    display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .slot-legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: var(--ink-soft);
+  }
+  .slot-legend-dot { width: 14px; height: 14px; border-radius: 4px; }
+  .slot-legend-dot.available { background: #22c55e; }
+  .slot-legend-dot.occupied  { background: var(--red); }
+  .slot-legend-dot.reserved  { background: var(--amber); }
+  .slot-legend-dot.selected  { background: #2563eb; box-shadow: 0 0 0 2px #1d4ed8; }
+
+  /* Stats */
+  .slot-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .slot-stat { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .slot-stat.free     { background: #dcfce7; color: #15803d; }
+  .slot-stat.occupied { background: var(--red-tint); color: var(--red); }
+  .slot-stat.reserved { background: #FEF3D7; color: #A0621A; }
+
+  /* Slot grid */
+  .booking-slot-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 7px; margin-bottom: 14px;
+  }
+  @media (max-width: 580px) { .booking-slot-grid { grid-template-columns: repeat(7, 1fr); } }
+  @media (max-width: 380px) { .booking-slot-grid { grid-template-columns: repeat(5, 1fr); } }
+
+  .bslot {
+    aspect-ratio: 1; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    cursor: pointer; border: 2px solid transparent;
+    transition: transform 0.14s, box-shadow 0.14s;
+    position: relative; user-select: none;
+  }
+  .bslot:hover { transform: scale(1.13); z-index: 2; }
+
+  .bslot.available {
+    background: #22c55e; color: #fff; border-color: #16a34a;
+  }
+  .bslot.available:hover {
+    background: #16a34a;
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.35);
+  }
+  .bslot.occupied {
+    background: var(--red); color: #fff;
+    border-color: #922b21; cursor: not-allowed;
+  }
+  .bslot.occupied:hover  { transform: none; box-shadow: none; }
+  .bslot.reserved {
+    background: var(--amber); color: #fff;
+    border-color: #b7770d; cursor: not-allowed;
+  }
+  .bslot.reserved:hover  { transform: none; box-shadow: none; }
+
+  .bslot.selected {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important; color: #fff !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.4);
+    animation: pulseSel 1.2s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes pulseSel {
+    0%,100%{ box-shadow: 0 0 0 3px rgba(37,99,235,0.35); }
+    50%    { box-shadow: 0 0 0 7px rgba(37,99,235,0.12); }
+  }
+
+  /* Tooltip */
+  .bslot .tip {
+    display: none; position: absolute;
+    bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: #fff; border-radius: 6px;
+    padding: 5px 9px; font-size: 10.5px; font-weight: 600;
+    white-space: nowrap; z-index: 20; pointer-events: none;
+  }
+  .bslot .tip::after {
+    content: ''; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%); border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+  .bslot:hover .tip { display: block; }
+
+  /* Selected slot callout */
+  .selected-slot-callout {
+    display: none; align-items: center; gap: 10px;
+    background: #f3f4f6; border: 1.5px solid #9ca3af;
+    border-radius: 10px; padding: 11px 15px;
+    font-size: 13.5px; font-weight: 700; color: #4b5563;
+  }
+  .selected-slot-callout.show { display: flex; }
+  .selected-slot-callout .sc-icon { font-size: 18px; }
+  .selected-slot-callout .sc-clear {
+    margin-left: auto; font-size: 11px; font-weight: 700;
+    color: #15803d; cursor: pointer; text-decoration: underline;
+    background: none; border: none; padding: 0; font-family: inherit;
+  }
+
+  /* Skeleton */
+  .slot-skeleton { display: grid; grid-template-columns: repeat(10, 1fr); gap: 7px; }
+  @media (max-width: 580px) { .slot-skeleton { grid-template-columns: repeat(7, 1fr); } }
+  .sk-cell {
+    aspect-ratio: 1; border-radius: 7px;
+    background: linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%);
+    background-size: 200% 100%; animation: shimmer 1.4s infinite;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* ── Gmail section ───────────────────────────────────────────────── */
+  .gmail-section { margin-bottom: 24px; }
+  .gmail-section-label {
+    font-size: 12px; font-weight: 700; color: var(--ink-soft);
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .gmail-field-wrap { position: relative; }
+  .gmail-field-wrap .gmail-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    font-size: 17px; pointer-events: none; line-height: 1;
+  }
+  .gmail-field-wrap input[type="email"] {
+    width: 100%; box-sizing: border-box;
+    padding: 13px 42px 13px 42px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: inherit; font-size: 14.5px; outline: none;
+    transition: border-color .2s, box-shadow .2s; background: #fff; color: var(--ink);
+  }
+  .gmail-field-wrap input[type="email"]::placeholder { color: #aaa; }
+  .gmail-field-wrap input[type="email"]:focus {
+    border-color: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.13);
+  }
+  .gmail-field-wrap input[type="email"].err   { border-color: #ef4444; }
+  .gmail-field-wrap input[type="email"].valid  { border-color: var(--green); }
+  .gmail-valid-check {
+    display: none; position: absolute; right: 13px; top: 50%;
+    transform: translateY(-50%); color: var(--green,#22c55e);
+    font-size: 18px; font-weight: 800;
+  }
+  .gmail-valid-check.show { display: block; }
+  .gmail-field-error { font-size:12px; color:#ef4444; margin-top:5px; display:none; padding-left:2px; }
+  .gmail-field-error.show { display: block; }
+  .gmail-hint { font-size:12px; color:var(--ink-soft); margin-top:6px; display:flex; align-items:center; gap:5px; }
+
+  /* ── Confirmation ────────────────────────────────────────────────── */
+  .confirm-card .sent-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f0fdf4; border: 1px solid #bbf7d0;
+    border-radius: 10px; padding: 12px 18px;
+    font-size: 14px; font-weight: 700; color: #166534;
+    margin-bottom: 22px; width: 100%; box-sizing: border-box; justify-content: center;
+  }
+  .confirm-card .sent-badge .sent-email { font-weight:800; word-break:break-all; }
+  .confirm-card .check-note { font-size:13px; color:var(--ink-soft); margin-bottom:6px; }
+  .confirm-card .gmail-check-steps {
+    background: var(--panel,#f8f9fa); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    font-size: 13px; color: var(--ink-soft);
+    text-align: left; margin-bottom: 22px; list-style: none;
+  }
+  .confirm-card .gmail-check-steps li { padding:4px 0; }
+  .confirm-card .gmail-check-steps li::before { content:"→ "; color:var(--green,#22c55e); font-weight:700; }
+</style>
 </head>
 <body>
 
@@ -20,45 +214,171 @@
 
 <div class="booking-shell">
 
-  <!-- Selection view -->
+  <!-- ── Selection view ── -->
   <div id="selectView">
     <div class="eyebrow">Reserve a slot</div>
     <h1>Where are you parking?</h1>
-    <p class="lede">Pick a zone, choose a duration, and confirm — takes under a minute.</p>
+    <p class="lede">Pick a zone, select an available slot (green), choose a duration, and enter your Gmail — your token arrives in your inbox.</p>
 
+    <!-- Step 1: Zone -->
+    <div class="section-label">1 — Choose a zone</div>
     <div class="zone-grid" id="zoneGrid">
       <!-- populated by booking.js -->
     </div>
 
-    <div class="duration-grid" id="durationGrid">
+    <!-- Step 2: Slot picker (shown after zone selected) -->
+    <div id="slotPickerSection" class="slot-picker-section" style="display:none;">
+      <div class="slot-picker-label">
+        <span class="live-dot"></span>
+        <span>2 — Pick a parking slot</span>
+        &nbsp;·&nbsp;<span id="slotPickerTitle" style="font-weight:600;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink-soft);"></span>
+      </div>
+
+      <div class="slot-legend">
+        <div class="slot-legend-item"><div class="slot-legend-dot available"></div> Available</div>
+        <div class="slot-legend-item"><div class="slot-legend-dot occupied"></div> Occupied</div>
+        <div class="slot-legend-item"><div class="slot-legend-dot reserved"></div> Reserved</div>
+        <div class="slot-legend-item"><div class="slot-legend-dot selected"></div> Your pick</div>
+      </div>
+
+      <div class="slot-stats" id="slotStats"></div>
+
+      <div id="slotGridContainer"><!-- rendered by booking.js --></div>
+
+      <div class="selected-slot-callout" id="selectedSlotCallout">
+        <span class="sc-icon">🅿️</span>
+        <span id="selectedSlotText">Slot selected</span>
+        <button class="sc-clear" id="clearSlotBtn">Clear</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Duration -->
+    <div class="section-label" id="durationLabel" style="display:none;">3 — Choose duration</div>
+    <div class="duration-grid" id="durationGrid" style="display:none;">
       <!-- populated by booking.js -->
     </div>
 
-    <div class="pay-grid" id="payGrid">
-      <button class="pay-card selected" data-method="khalti"><span class="sw" style="background:var(--khalti)"></span>Khalti</button>
-      <button class="pay-card" data-method="esewa"><span class="sw" style="background:var(--esewa)"></span>eSewa</button>
-      <button class="pay-card" data-method="cash"><span class="sw" style="background:#333"></span>Cash on arrival</button>
+    <!-- Step 4: Payment -->
+    <div class="section-label" id="payLabel" style="display:none;">4 — Payment method</div>
+    <div class="pay-grid" id="payGrid" style="display:none;">
+      <button class="pay-card selected" data-method="counter"><span class="sw" style="background:var(--primary)"></span>Pay at Counter (Cash / QR)</button>
+      <button class="pay-card" data-method="khalti"><span class="sw" style="background:#5C2D91"></span>Pay with Khalti</button>
     </div>
 
     <div class="summary-card" id="summaryCard" style="display:none;">
       <div class="summary-row"><span>Zone</span><span id="sumZone">—</span></div>
+      <div class="summary-row"><span>Slot</span><span id="sumSlot">—</span></div>
       <div class="summary-row"><span>Duration</span><span id="sumDuration">—</span></div>
-      <div class="summary-row"><span>Payment</span><span id="sumPayment">Khalti</span></div>
+      <div class="summary-row"><span>Payment</span><span id="sumPayment">Pay at Counter</span></div>
       <div class="summary-row total"><span>Total</span><span id="sumTotal">NPR 0</span></div>
     </div>
 
-    <div class="status-banner error" id="errorBanner"></div>
+    <!-- User Account Status / Demo Gmail Recipient -->
+    <div class="user-auth-card" id="userAuthCard" style="margin-bottom:24px;border-radius:12px;padding:18px 20px;border:1.5px solid var(--border);background:#fff;box-shadow:var(--shadow-sm);">
+      <div id="loggedInState" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#e0f2fe;color:#0284c7;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">👤</div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.06em;">Active Account</div>
+              <div style="font-size:15px;font-weight:800;color:var(--ink);" id="loggedAccountEmail">you@gmail.com</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#16a34a;background:#f0fdf4;padding:4px 10px;border-radius:20px;border:1px solid #bbf7d0;">
+              ✓ Token will be sent here
+            </span>
+            <button type="button" id="switchDemoUserBtn" style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:underline;cursor:pointer;background:none;border:none;">Change</button>
+          </div>
+        </div>
+      </div>
 
-    <button class="btn-primary" style="width:100%;" id="confirmBtn">Confirm booking →</button>
+      <div id="loggedOutState">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:18px;">📧</span>
+            <div style="font-size:14px;font-weight:800;color:var(--ink);">Gmail for Entry Token <span style="font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:2px 8px;border-radius:12px;margin-left:4px;">DEMO MODE</span></div>
+          </div>
+          <a href="driver-login.html?redirect=booking.html" style="font-size:12.5px;color:var(--primary);font-weight:600;text-decoration:underline;">Existing Account Sign In →</a>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="flex:1;position:relative;">
+            <input type="email" id="demoEmailInput" placeholder="yourname@gmail.com" value="driver.demo@gmail.com" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;color:var(--ink);box-sizing:border-box;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'" />
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--ink-soft);margin-top:8px;display:flex;align-items:center;gap:6px;">
+          <span>⚡</span> <span>Instant reservation enabled — your digital entry token will be generated and shown instantly.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-banner error" id="errorBanner"></div>
+    <button class="btn-primary" style="width:100%;" id="confirmBtn">Confirm &amp; Reserve Slot →</button>
   </div>
 
-  <!-- Confirmation view -->
-  <div class="confirm-card" id="confirmView" style="display:none;">
-    <div class="check">✓</div>
-    <h2>Slot reserved</h2>
-    <p id="confirmText">Show this token at entry. A confirmation was also sent by SMS.</p>
-    <div class="token-box" id="tokenBox">—</div>
-    <a href="index.html" class="btn-primary">Back to home</a>
+  <!-- ── Khalti verification loading overlay ── -->
+  <div id="khaltiVerifyOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:none;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2);max-width:380px;">
+      <div style="width:48px;height:48px;border:4px solid #e2e8f0;border-top-color:#5C2D91;border-radius:50%;animation:kspin .8s linear infinite;margin:0 auto 16px;"></div>
+      <div style="font-size:17px;font-weight:800;color:#1e293b;margin-bottom:6px;">Verifying Khalti Payment…</div>
+      <div style="font-size:13px;color:#64748b;">Please wait while we confirm your payment.</div>
+    </div>
+  </div>
+  <style>@keyframes kspin{to{transform:rotate(360deg)}}</style>
+
+  <!-- ── Confirmation view ── -->
+  <div class="confirm-card" id="confirmView" style="display:none;text-align:center;">
+    <div class="check" style="width:60px;height:60px;border-radius:50%;background:#dcfce7;color:#15803d;font-size:28px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;font-weight:800;">✓</div>
+    <h2 style="font-size:24px;font-weight:800;color:var(--ink);margin-bottom:8px;">Slot Reserved Successfully!</h2>
+
+    <!-- Demo Gmail Delivery Notice -->
+    <div class="sent-badge" id="sentBadge" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 18px;margin:16px 0;font-size:13.5px;color:#166534;">
+      <span>📧</span>
+      <span><strong>Demo Confirmation:</strong> Entry token sent to <strong class="sent-email" id="sentEmail"></strong></span>
+    </div>
+
+    <!-- Digital Token Entry Pass -->
+    <div id="tokenPassBox" style="background:#f8fafc;border:2px dashed #059669;border-radius:14px;padding:20px;margin:20px 0;text-align:center;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px;">Your Digital Gate Entry Token</div>
+      <div style="font-size:32px;font-weight:800;letter-spacing:3px;color:#059669;font-family:'JetBrains Mono',monospace;margin-bottom:10px;" id="displayTokenCode">PE-000000</div>
+      <button type="button" id="copyTokenBtn" onclick="copyTokenCode()" style="padding:6px 16px;background:#059669;color:#fff;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;">
+        📋 Copy Token Code
+      </button>
+      <div id="copySuccessMsg" style="font-size:12px;color:#15803d;font-weight:700;margin-top:6px;display:none;">✓ Token copied to clipboard!</div>
+    </div>
+
+    <!-- Summary Details Table -->
+    <div id="confirmDetailsBox" style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;text-align:left;font-size:13.5px;">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;">
+        <span style="color:#64748b;">Parking Zone:</span>
+        <strong id="confirmZoneName" style="color:var(--ink);">—</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;">
+        <span style="color:#64748b;">Reserved Slot:</span>
+        <strong id="confirmSlotName" style="color:#059669;">—</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;">
+        <span style="color:#64748b;">Duration:</span>
+        <strong id="confirmDuration" style="color:var(--ink);">—</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;">
+        <span style="color:#64748b;">Settlement Method:</span>
+        <strong id="confirmPaymentMethod" style="color:var(--ink);">Pay at Counter (Cash / QR)</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0 0;font-size:15px;">
+        <span style="font-weight:700;color:var(--ink);">Total Payable:</span>
+        <strong id="confirmTotalAmount" style="color:#059669;font-weight:800;">NPR 0</strong>
+      </div>
+    </div>
+
+    <p style="font-size:12.5px;color:#64748b;margin-bottom:20px;line-height:1.5;">
+      💡 <strong>At the Parking Gate:</strong> Flash or tell this 6-character token code to the entrance barrier attendant to enter your spot.
+    </p>
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <a href="index.html" class="btn-primary" style="padding:10px 20px;text-decoration:none;">Back to home</a>
+      <a href="slot-status.html" class="btn-secondary" style="padding:10px 20px;text-decoration:none;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;color:var(--ink);">View Live Bay Radar</a>
+    </div>
   </div>
 
 </div>

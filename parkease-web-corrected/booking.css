@@ -1,37 +1,251 @@
-.booking-shell{max-width:640px; margin:0 auto; padding:48px 28px 80px;}
-.booking-shell .eyebrow{font-size:12.5px; font-weight:700; color:var(--green-dark); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:10px;}
-.booking-shell h1{font-size:clamp(24px,3vw,30px); font-weight:800; letter-spacing:-0.01em; margin-bottom:8px;}
-.booking-shell .lede{font-size:14.5px; color:var(--ink-soft); margin-bottom:30px;}
+/* ==========================================================================
+   ParkEase Nepal — Reservation & Booking Stylesheet
+   ========================================================================== */
 
-.zone-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px;}
-@media (max-width:520px){ .zone-grid{grid-template-columns:1fr;} }
-.zone-card{border:1px solid var(--border); border-radius:12px; padding:16px; text-align:left; background:#fff; cursor:pointer;}
-.zone-card:hover{border-color:var(--green);}
-.zone-card.selected{border-color:var(--green); background:var(--green-tint); box-shadow:0 0 0 2px var(--green) inset;}
-.zone-card .zname{font-weight:800; font-size:15px;}
-.zone-card .zfree{font-size:12.5px; color:var(--ink-soft); margin-top:4px;}
-.zone-card .zfree.low{color:var(--red);}
+.booking-shell {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 42px 24px 80px;
+}
 
-.duration-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:28px;}
-@media (max-width:520px){ .duration-grid{grid-template-columns:1fr 1fr;} }
-.duration-card{border:1px solid var(--border); border-radius:10px; padding:12px 8px; text-align:center; background:#fff; cursor:pointer;}
-.duration-card:hover{border-color:var(--green);}
-.duration-card.selected{border-color:var(--green); background:var(--green-tint);}
-.duration-card .dlabel{font-weight:700; font-size:13.5px;}
-.duration-card .drate{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+.booking-shell .eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
 
-.pay-grid{display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
-.pay-card{border:1px solid var(--border); border-radius:10px; padding:11px 18px; font-weight:700; font-size:13.5px; background:#fff; cursor:pointer; display:flex; align-items:center; gap:8px;}
-.pay-card:hover{border-color:var(--green);}
-.pay-card.selected{border-color:var(--green); background:var(--green-tint);}
-.pay-card .sw{width:10px; height:10px; border-radius:3px;}
+.booking-shell h1 {
+  font-size: clamp(26px, 3.2vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
 
-.summary-card{border:1px solid var(--border); border-radius:12px; padding:18px 20px; background:var(--panel); margin-bottom:24px;}
-.summary-row{display:flex; justify-content:space-between; font-size:13.5px; color:var(--ink-soft); padding:5px 0;}
-.summary-row.total{font-weight:800; color:var(--ink); font-size:15px; border-top:1px solid var(--border); margin-top:6px; padding-top:10px;}
+.booking-shell .lede {
+  font-size: 14.5px;
+  color: var(--slate-500);
+  margin-bottom: 32px;
+  line-height: 1.55;
+}
 
-.confirm-card{text-align:center; border:1px solid var(--border); border-radius:16px; padding:40px 28px;}
-.confirm-card .check{width:52px; height:52px; border-radius:50%; background:var(--green-tint); color:var(--green-dark); display:flex; align-items:center; justify-content:center; font-size:26px; margin:0 auto 18px;}
-.confirm-card h2{font-size:22px; font-weight:800; margin-bottom:8px;}
-.confirm-card p{font-size:14px; color:var(--ink-soft); margin-bottom:20px;}
-.token-box{font-family:monospace; font-size:20px; font-weight:800; letter-spacing:2px; background:var(--panel); border:1px dashed var(--border); border-radius:10px; padding:14px; margin-bottom:20px; color:var(--green-dark);}
+/* Zone Selection Grid */
+.zone-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 520px) {
+  .zone-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.zone-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  text-align: left;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.zone-card:hover {
+  border-color: var(--slate-400);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.zone-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: 0 0 0 1px var(--primary), var(--shadow-sm);
+}
+
+.zone-card .zname {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--slate-900);
+}
+
+.zone-card .zfree {
+  font-size: 12.5px;
+  color: var(--slate-500);
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.zone-card .zfree.low {
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* Duration Grid */
+.duration-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 520px) {
+  .duration-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.duration-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  text-align: center;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.duration-card:hover {
+  border-color: var(--slate-400);
+}
+
+.duration-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.duration-card .dlabel {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--slate-900);
+}
+
+.duration-card .drate {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin-top: 3px;
+}
+
+/* Payment Method Selection */
+.pay-grid {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.pay-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 13.5px;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.pay-card:hover {
+  border-color: var(--slate-400);
+}
+
+.pay-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.pay-card .sw {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Summary Card */
+.summary-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  background: var(--slate-50);
+  margin-bottom: 26px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: var(--slate-600);
+  padding: 6px 0;
+}
+
+.summary-row.total {
+  font-weight: 800;
+  color: var(--slate-900);
+  font-size: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  padding-top: 12px;
+}
+
+/* Confirmation Card */
+.confirm-card {
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 44px 32px;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.confirm-card .check {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 20px;
+  border: 1px solid var(--primary-border);
+}
+
+.confirm-card h2 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+
+.confirm-card p {
+  font-size: 14px;
+  color: var(--slate-600);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.token-box {
+  font-family: var(--font-mono, monospace);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  background: var(--slate-100);
+  border: 1.5px dashed var(--slate-300);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 24px;
+  color: var(--primary-dark);
+}

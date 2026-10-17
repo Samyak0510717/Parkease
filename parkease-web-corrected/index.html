@@ -1,119 +1,687 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ParkEase — Smart parking for Nepal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkEase Nepal — Smart Urban Parking for Kathmandu Valley</title>
+  <meta name="description" content="Check real-time bay availability and reserve verified parking spots across Kathmandu, Patan, and Lalitpur.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <div class="nav-inner">
-    <a class="logo" href="index.html" aria-label="ParkEase home"><span class="mark">P</span>ParkEase</a>
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="#how-it-works">How it works</a>
-      <a href="#about">About ParkEase</a>
-    </nav>
-    <div class="nav-right">
-      <a href="driver-login.html" class="btn-outline">User login</a>
-      <a href="admin-login.html" class="btn-outline btn-outline-blue">Admin login</a>
+
+  <!-- Main Navigation Header -->
+  <header>
+    <div class="wrap nav-inner">
+      <a class="logo" href="index.html" aria-label="ParkEase Nepal Home">
+        <span class="logo-badge">P</span>
+        <span>ParkEase</span>
+        <span class="logo-tag">Nepal</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="index.html" class="active">Home</a>
+        <a href="slot-status.html">Live Status</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#rates">Zones &amp; Rates</a>
+        <a href="#faq">Driver FAQ</a>
+      </nav>
+
+      <div class="nav-right">
+        <a href="driver-login.html" class="btn btn-outline btn-sm">Driver Login</a>
+        <a href="admin-login.html" class="btn btn-outline-blue btn-sm">Admin Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="wrap hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge-pill">
+            <span class="live-indicator-dot"></span>
+            <span>Real-time bay telemetry active</span>
+          </div>
+
+          <h1 class="hero-title">
+            Stress-free city parking across <span class="highlight">Kathmandu Valley</span>.
+          </h1>
+
+          <p class="hero-desc">
+            Check live bay occupancy at New Road, Baneshwor, Thamel, Khusibu, and Patan Durbar. Secure your slot ahead of time with zero circling.
+          </p>
+
+          <!-- Interactive Fast Finder Card -->
+          <div class="finder-box">
+            <div class="finder-header">
+              <span style="font-size: 13px; font-weight: 700; color: var(--slate-700);">Quick Slot Finder</span>
+              <div class="vehicle-switch" id="vehicleSwitch">
+                <button type="button" class="vehicle-btn active" data-rate="25">🛵 Two-Wheeler</button>
+                <button type="button" class="vehicle-btn" data-rate="50">🚗 Four-Wheeler</button>
+              </div>
+            </div>
+
+            <div class="finder-input-row">
+              <div class="finder-input-wrap">
+                <span class="finder-icon">📍</span>
+                <select class="finder-select" id="heroZoneSelect" aria-label="Select Parking Zone">
+                  <option value="New Road">New Road Multi-Level Plaza (14 free)</option>
+                  <option value="Baneshwor">Baneshwor Commercial Hub (28 free)</option>
+                  <option value="Khusibu">Khusibu Ringroad Station (8 free)</option>
+                  <option value="Patan Durbar">Patan Durbar Heritage Zone (4 free)</option>
+                </select>
+              </div>
+              <a href="booking.html" class="btn btn-primary" id="heroFindBtn">
+                Book Slot <span>&rarr;</span>
+              </a>
+            </div>
+
+            <div class="quick-pills">
+              <span>Popular:</span>
+              <button type="button" class="quick-pill-btn" onclick="selectQuickZone('New Road')">New Road</button>
+              <button type="button" class="quick-pill-btn" onclick="selectQuickZone('Baneshwor')">Baneshwor</button>
+              <button type="button" class="quick-pill-btn" onclick="selectQuickZone('Patan Durbar')">Patan Durbar</button>
+              <button type="button" class="quick-pill-btn" onclick="selectQuickZone('Khusibu')">Khusibu</button>
+            </div>
+          </div>
+
+          <!-- Key Metrics -->
+          <div class="metrics-strip">
+            <div class="metric-item">
+              <strong>4 Live Hubs</strong>
+              <span>Monitored in Real-time</span>
+            </div>
+            <div class="metric-item">
+              <strong>NPR 25/hr</strong>
+              <span>Standard Base Rate</span>
+            </div>
+            <div class="metric-item">
+              <strong>&lt; 30s</strong>
+              <span>Instant Digital Pass</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual: Real Live Zone Explorer Panel -->
+        <div class="radar-panel" aria-label="Live Kathmandu Parking Availability">
+          <div class="radar-header">
+            <div class="radar-title">
+              <span>📡 Kathmandu Valley Radar</span>
+            </div>
+            <button type="button" class="radar-live-tag" style="cursor:pointer;" onclick="openPhotoModal(1)">📍 LIVE PHOTOS</button>
+          </div>
+
+          <div class="radar-body">
+            <div class="radar-zones-list">
+              <!-- Zone 1 -->
+              <div class="radar-zone-card" onclick="openPhotoModal(1)" title="Click to view live location photos">
+                <div class="zone-thumb-wrap">
+                  <img src="images/parking-2.jpg" alt="New Road Plaza Parking Bay">
+                </div>
+                <div class="zone-info-block">
+                  <div class="zone-name-row">
+                    <span class="zone-name-text">New Road Multi-Level</span>
+                    <span class="zone-type-tag">Covered</span>
+                  </div>
+                  <div class="zone-meta-row">
+                    <span class="zone-rate">NPR 25/hr</span>
+                    <span>•</span>
+                    <span>Dharahara East Gate</span>
+                  </div>
+                  <div class="view-photo-pill">📸 View Live Photos</div>
+                </div>
+                <div class="zone-capacity-wrap">
+                  <span class="zone-avail-badge avail-high">14 Free</span>
+                  <div class="zone-progress-bar">
+                    <div class="zone-progress-fill" style="width: 35%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Zone 2 -->
+              <div class="radar-zone-card" onclick="openPhotoModal(3)" title="Click to view live location photos">
+                <div class="zone-thumb-wrap">
+                  <img src="images/parking-3.jpg" alt="Baneshwor Hub Parking Bay">
+                </div>
+                <div class="zone-info-block">
+                  <div class="zone-name-row">
+                    <span class="zone-name-text">Baneshwor Commercial Hub</span>
+                    <span class="zone-type-tag">Ground</span>
+                  </div>
+                  <div class="zone-meta-row">
+                    <span class="zone-rate">NPR 25/hr</span>
+                    <span>•</span>
+                    <span>Opposite Eyeplex Mall</span>
+                  </div>
+                  <div class="view-photo-pill">📸 View Live Photos</div>
+                </div>
+                <div class="zone-capacity-wrap">
+                  <span class="zone-avail-badge avail-high">28 Free</span>
+                  <div class="zone-progress-bar">
+                    <div class="zone-progress-fill" style="width: 56%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Zone 3 -->
+              <div class="radar-zone-card" onclick="openPhotoModal(4)" title="Click to view live location photos">
+                <div class="zone-thumb-wrap">
+                  <img src="images/parking-4.jpg" alt="Patan Durbar Heritage Lot">
+                </div>
+                <div class="zone-info-block">
+                  <div class="zone-name-row">
+                    <span class="zone-name-text">Patan Durbar Square Zone</span>
+                    <span class="zone-type-tag">Heritage Lot</span>
+                  </div>
+                  <div class="zone-meta-row">
+                    <span class="zone-rate">NPR 30/hr</span>
+                    <span>•</span>
+                    <span>Mangal Bazaar Side</span>
+                  </div>
+                  <div class="view-photo-pill">📸 View Live Photos</div>
+                </div>
+                <div class="zone-capacity-wrap">
+                  <span class="zone-avail-badge avail-med">4 Free</span>
+                  <div class="zone-progress-bar">
+                    <div class="zone-progress-fill" style="width: 16%; background: var(--warning);"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Zone 4 -->
+              <div class="radar-zone-card" onclick="openPhotoModal(2)" title="Click to view live location photos">
+                <div class="zone-thumb-wrap">
+                  <img src="images/parking-1.jpg" alt="Khusibu Station Parking Bay">
+                </div>
+                <div class="zone-info-block">
+                  <div class="zone-name-row">
+                    <span class="zone-name-text">Khusibu Station</span>
+                    <span class="zone-type-tag">Open Air</span>
+                  </div>
+                  <div class="zone-meta-row">
+                    <span class="zone-rate">NPR 20/hr</span>
+                    <span>•</span>
+                    <span>Near Link Road</span>
+                  </div>
+                  <div class="view-photo-pill">📸 View Live Photos</div>
+                </div>
+                <div class="zone-capacity-wrap">
+                  <span class="zone-avail-badge avail-high">8 Free</span>
+                  <div class="zone-progress-bar">
+                    <div class="zone-progress-fill" style="width: 40%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="radar-footer-note">
+            <span>🛡️ 24/7 Verified attendants &amp; secure access at all locations</span>
+            <a href="slot-status.html" style="font-weight: 700; color: var(--primary);">Open Full Map &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment & Settlement Options Bar -->
+    <section class="ecosystem-bar">
+      <div class="wrap ecosystem-inner">
+        <span class="ecosystem-label">Convenient Gate Settlement</span>
+        <div class="partner-badges">
+          <span class="partner-chip"><i class="dot-partner dot-khalti" style="background:#5C2D91;"></i>Khalti Digital Wallet</span>
+          <span class="partner-chip"><i class="dot-partner dot-qr"></i>Gate Counter QR</span>
+          <span class="partner-chip"><i class="dot-partner dot-fonepay"></i>Cash on Arrival</span>
+          <span class="partner-chip"><i class="dot-partner dot-qr"></i>Instant Digital Pass</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Practical Features Built For Nepali Commuters -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-badge">Built for City Commuters</span>
+          <h2 class="section-title">Designed to solve everyday Kathmandu traffic friction.</h2>
+          <p class="section-subtitle">
+            No more driving around crowded New Road alleys or blocking emergency lanes. Reserve, verify, and drive straight in.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-box">⚡</div>
+            <h3>Real-Time Slot Telemetry</h3>
+            <p>Know exact slot availability before you start your engine. Our ultrasonic sensors ensure zero double-booking or false vacancy claims.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">🎟️</div>
+            <h3>Instant Digital Gate Token</h3>
+            <p>Receive a 6-character alphanumeric pass and QR code directly on your screen and Gmail. Flash it at the entrance gate scanner for 2-second entry.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">⏱️</div>
+            <h3>Flexible Time Extensions</h3>
+            <p>Meeting running late? Extend your active parking duration in 1-click directly from your driver dashboard without returning to the vehicle.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">🔒</div>
+            <h3>Secure &amp; Guarded Facilities</h3>
+            <p>Every affiliated zone features boom-barrier access, instant gate verification, and verified on-site parking attendants.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">🇳🇵</div>
+            <h3>Transparent Local Rates</h3>
+            <p>Standardized Kathmandu Metropolitan parking tariffs starting from NPR 20/hr. No surprise surge fees or unauthorized local charging.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">💳</div>
+            <h3>Flexible Counter &amp; Cash Settlement</h3>
+            <p>Generate your digital reservation token online and settle quickly with cash or scanner QR at the entrance gate booth.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section section-alt" id="how-it-works">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-badge">Simple 3-Step Process</span>
+          <h2 class="section-title">How ParkEase works in 3 easy steps</h2>
+          <p class="section-subtitle">A straightforward workflow built for fast, painless city mobility.</p>
+        </div>
+
+        <div class="workflow-row">
+          <div class="workflow-card">
+            <span class="step-chip">1</span>
+            <h3>Select Zone &amp; Bay</h3>
+            <p>Browse live zone cards or the interactive bay layout to pick an open spot that fits your vehicle size and arrival window.</p>
+          </div>
+
+          <div class="workflow-card">
+            <span class="step-chip">2</span>
+            <h3>Confirm Duration</h3>
+            <p>Select your expected duration (1 to 8 hours) and confirm your reservation pass for counter settlement upon arrival.</p>
+          </div>
+
+          <div class="workflow-card">
+            <span class="step-chip">3</span>
+            <h3>Scan &amp; Park</h3>
+            <p>Show your booking token to the gate sensor or barrier attendant. Your spot is held and protected until your scheduled checkout.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rates & Zones Section -->
+    <section class="section" id="rates">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-badge">Transparent Pricing</span>
+          <h2 class="section-title">Kathmandu Valley Zone Tariffs</h2>
+          <p class="section-subtitle">Official city rates across all partner multi-level and surface lots.</p>
+        </div>
+
+        <div class="rate-table-card">
+          <table class="rate-table">
+            <thead>
+              <tr>
+                <th>Zone / Location</th>
+                <th>Two-Wheeler Rate</th>
+                <th>Four-Wheeler Rate</th>
+                <th>Operating Hours</th>
+                <th>Live Bay Photos</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="zone-col">
+                  <strong>New Road Multi-Level Plaza</strong>
+                  <span>Opposite Dharahara Gate, Kathmandu</span>
+                </td>
+                <td>NPR 25 / hr</td>
+                <td>NPR 50 / hr</td>
+                <td>06:00 AM – 11:00 PM</td>
+                <td><button type="button" class="btn btn-outline-blue btn-sm" onclick="openPhotoModal(1)" style="padding:4px 10px;font-size:12px;">📸 View Photos</button></td>
+                <td><span class="status-badge-inline badge-open">● Open &amp; Monitored</span></td>
+              </tr>
+              <tr>
+                <td class="zone-col">
+                  <strong>Baneshwor Commercial Hub</strong>
+                  <span>Shankhamul Road junction, Baneshwor</span>
+                </td>
+                <td>NPR 25 / hr</td>
+                <td>NPR 50 / hr</td>
+                <td>24 Hours (Full Day)</td>
+                <td><button type="button" class="btn btn-outline-blue btn-sm" onclick="openPhotoModal(3)" style="padding:4px 10px;font-size:12px;">📸 View Photos</button></td>
+                <td><span class="status-badge-inline badge-open">● Open &amp; Monitored</span></td>
+              </tr>
+              <tr>
+                <td class="zone-col">
+                  <strong>Patan Durbar Heritage Zone</strong>
+                  <span>Mangal Bazaar Outer Ring, Lalitpur</span>
+                </td>
+                <td>NPR 30 / hr</td>
+                <td>NPR 60 / hr</td>
+                <td>07:00 AM – 10:00 PM</td>
+                <td><button type="button" class="btn btn-outline-blue btn-sm" onclick="openPhotoModal(4)" style="padding:4px 10px;font-size:12px;">📸 View Photos</button></td>
+                <td><span class="status-badge-inline badge-open">● Open &amp; Monitored</span></td>
+              </tr>
+              <tr>
+                <td class="zone-col">
+                  <strong>Khusibu Ringroad Station</strong>
+                  <span>Nayabazar - Khusibu Link corridor</span>
+                </td>
+                <td>NPR 20 / hr</td>
+                <td>NPR 40 / hr</td>
+                <td>06:00 AM – 10:00 PM</td>
+                <td><button type="button" class="btn btn-outline-blue btn-sm" onclick="openPhotoModal(2)" style="padding:4px 10px;font-size:12px;">📸 View Photos</button></td>
+                <td><span class="status-badge-inline badge-open">● Open &amp; Monitored</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section section-alt" id="faq">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-badge">Common Questions</span>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-subtitle">Everything you need to know about parking with ParkEase Nepal.</p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h4>What happens if I arrive 10-15 minutes late?</h4>
+            <p>Your reserved bay is held exclusively for your booking window with a 20-minute grace period from your reservation start time.</p>
+          </div>
+
+          <div class="faq-item">
+            <h4>How do I settle my parking payment?</h4>
+            <p>You can pay online using Khalti digital wallet during booking, or generate a reservation pass and settle via cash or counter QR at the parking gate.</p>
+          </div>
+
+          <div class="faq-item">
+            <h4>How do I extend my parking if I need more time?</h4>
+            <p>Simply log in to your ParkEase Driver Account from your mobile browser, locate your active booking, and click "Extend Time".</p>
+          </div>
+
+          <div class="faq-item">
+            <h4>Are electric vehicle (EV) charging ports available?</h4>
+            <p>New Road Multi-Level and Baneshwor Hub both feature dedicated 7.4kW Type-2 AC chargers available for four-wheeler bookings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <section class="wrap">
+      <div class="cta-banner">
+        <h2>Ready to park faster in Kathmandu?</h2>
+        <p>Join thousands of local drivers saving time every day. Book your verified spot now or check live bay availability.</p>
+        <div class="cta-actions">
+          <a href="booking.html" class="btn btn-primary btn-lg">Reserve a Spot Now &rarr;</a>
+          <a href="slot-status.html" class="btn btn-outline btn-lg" style="color: #fff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">View Live Bay Radar</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="margin-top: 80px;">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="index.html">
+          <span class="logo-badge">P</span>
+          <span>ParkEase</span>
+        </a>
+        <p>Smart, reliable urban parking infrastructure designed for Kathmandu Valley commuters and commercial property owners.</p>
+        <div class="footer-contact-pill">
+          <span>📞 Hotline: +977 1-4432100 (Kathmandu)</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Driver Services</h4>
+        <ul>
+          <li><a href="booking.html">Reserve a Bay</a></li>
+          <li><a href="slot-status.html">Live Status Radar</a></li>
+          <li><a href="driver-login.html">Driver Account</a></li>
+          <li><a href="#rates">Tariff Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Locations</h4>
+        <ul>
+          <li><a href="slot-status.html">New Road Plaza</a></li>
+          <li><a href="slot-status.html">Baneshwor Hub</a></li>
+          <li><a href="slot-status.html">Patan Durbar Lot</a></li>
+          <li><a href="slot-status.html">Khusibu Corridor</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Operators</h4>
+        <ul>
+          <li><a href="admin-login.html">Admin Portal</a></li>
+          <li><a href="admin-dashboard.html">Zone Dashboard</a></li>
+          <li><a href="mailto:support@parkease-nepal.com">Operator Support</a></li>
+          <li><a href="#">Privacy &amp; Terms</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="wrap footer-bottom">
+      <span>&copy; 2026 ParkEase Technologies Nepal Pvt. Ltd. All rights reserved.</span>
+      <span>Designed for human city living in Nepal</span>
+    </div>
+  </footer>
+
+  <!-- Live Location & Photos Modal -->
+  <div class="photo-modal-overlay" id="photoModalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalZoneName">
+    <div class="photo-modal-card">
+      <div class="photo-modal-header">
+        <div class="photo-modal-title-wrap">
+          <span style="font-size: 20px;">📍</span>
+          <div>
+            <div class="photo-modal-title">Live Parking Location &amp; Photos</div>
+            <div style="font-size: 12px; color: var(--slate-400);">Verified real-time bay telemetry across Kathmandu Valley</div>
+          </div>
+        </div>
+        <button type="button" class="photo-modal-close" onclick="closePhotoModal()" aria-label="Close modal">&times;</button>
+      </div>
+
+      <!-- Modal Zone Switcher Tabs -->
+      <div class="modal-tabs" id="modalZoneTabs">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="photo-modal-body">
+        <div class="main-photo-view">
+          <img id="modalMainImg" src="images/parking-2.jpg" alt="Parking Bay View">
+          <div class="photo-floating-badge">
+            <span class="dot"></span>
+            <span id="modalLiveDotLabel">LIVE CAMERA TELEMETRY</span>
+          </div>
+        </div>
+
+        <div class="photo-thumbs-strip" id="modalThumbStrip">
+          <!-- Rendered by JS -->
+        </div>
+
+        <div class="modal-details-grid">
+          <div>
+            <h3 class="modal-zone-name" id="modalZoneName">New Road Multi-Level Plaza</h3>
+            <p class="modal-zone-addr" id="modalZoneAddr">Opposite Dharahara Gate, Pako New Road, Kathmandu</p>
+            <div class="modal-features-list" id="modalFeaturesList">
+              <span class="modal-feat-tag">🏢 Covered Multi-Level</span>
+              <span class="modal-feat-tag">⚡ EV Charging Available</span>
+              <span class="modal-feat-tag">🛡️ Attendant on Duty</span>
+            </div>
+          </div>
+
+          <div class="modal-side-actions">
+            <div class="modal-avail-card">
+              <div class="modal-avail-num" id="modalFreeCount">14 FREE</div>
+              <div class="modal-avail-txt">Real-time open spaces now</div>
+            </div>
+            <a href="booking.html" class="btn btn-primary" id="modalBookBtn" style="text-align:center; justify-content:center;">
+              Book This Bay &rarr;
+            </a>
+            <a href="slot-status.html" class="btn btn-outline btn-sm" id="modalRadarBtn" style="text-align:center; justify-content:center;">
+              View Live Bay Grid
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</header>
 
-<main>
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <div class="eyebrow">SMART PARKING FOR NEPAL</div>
-        <h1>Stop dealing with <span class="accent">parking</span> problems every day.</h1>
-        <p class="sub">Find open parking around Kathmandu Valley, reserve your space, and arrive with confidence.</p>
-        <div class="hero-actions">
-          <a href="driver-login.html" class="btn-primary">Find a parking spot <span aria-hidden="true">→</span></a>
-          <a href="#how-it-works" class="text-link">See how it works</a>
+  <script>
+    // Live Zone Data with Photos
+    const LOCATION_DATA = {
+      1: {
+        id: 1,
+        name: 'New Road Multi-Level Plaza',
+        address: 'Opposite Dharahara Gate, Pako New Road, Kathmandu',
+        image: 'images/parking-2.jpg',
+        free: 14,
+        total: 40,
+        rate: 'NPR 25/hr',
+        features: ['🏢 Covered Multi-Level', '⚡ 7.4kW EV Chargers', '🛡️ Attendant on Duty', '🚗 Car & Two-Wheeler']
+      },
+      3: {
+        id: 3,
+        name: 'Baneshwor Commercial Hub',
+        address: 'Shankhamul Road junction, Opposite Eyeplex Mall, Baneshwor',
+        image: 'images/parking-3.jpg',
+        free: 28,
+        total: 50,
+        rate: 'NPR 25/hr',
+        features: ['🟡 Marked Bays', '⚡ EV Fast Charging', '🛡️ 24/7 Attendants', '🚗 Spacious Parking']
+      },
+      4: {
+        id: 4,
+        name: 'Patan Durbar Heritage Zone',
+        address: 'Mangal Bazaar Outer Ring, Lalitpur',
+        image: 'images/parking-4.jpg',
+        free: 4,
+        total: 15,
+        rate: 'NPR 30/hr',
+        features: ['🏛️ Heritage Lot', '🚶 2-min to Square', '🛡️ Guarded Barrier', '🚗 Four-Wheeler & Bikes']
+      },
+      2: {
+        id: 2,
+        name: 'Khusibu Ringroad Station',
+        address: 'Nayabazar - Khusibu Link Corridor, Ring Road',
+        image: 'images/parking-1.jpg',
+        free: 8,
+        total: 20,
+        rate: 'NPR 20/hr',
+        features: ['🛵 Dedicated Two-Wheeler Bay', '🛣️ Ring Road Access', '🛡️ Attendant Station', '💰 Low Rate']
+      }
+    };
+
+    let activeModalZoneId = 1;
+
+    function openPhotoModal(zoneId) {
+      if (!zoneId || !LOCATION_DATA[zoneId]) zoneId = 1;
+      activeModalZoneId = zoneId;
+      renderModalTabs();
+      renderModalContent(zoneId);
+      document.getElementById('photoModalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePhotoModal() {
+      document.getElementById('photoModalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close on backdrop click
+    document.getElementById('photoModalOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closePhotoModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closePhotoModal();
+    });
+
+    function renderModalTabs() {
+      const tabsContainer = document.getElementById('modalZoneTabs');
+      tabsContainer.innerHTML = Object.values(LOCATION_DATA).map(z => `
+        <button type="button" class="modal-tab-btn ${z.id === activeModalZoneId ? 'active' : ''}" onclick="switchModalZone(${z.id})">
+          ${z.name.split(' ')[0]} ${z.name.split(' ')[1] || ''}
+        </button>
+      `).join('');
+    }
+
+    function switchModalZone(id) {
+      activeModalZoneId = id;
+      renderModalTabs();
+      renderModalContent(id);
+    }
+
+    function renderModalContent(id) {
+      const data = LOCATION_DATA[id];
+      if (!data) return;
+
+      document.getElementById('modalMainImg').src = data.image;
+      document.getElementById('modalMainImg').alt = data.name;
+      document.getElementById('modalZoneName').textContent = data.name;
+      document.getElementById('modalZoneAddr').textContent = data.address;
+      document.getElementById('modalFreeCount').textContent = `${data.free} FREE`;
+      document.getElementById('modalBookBtn').href = `booking.html?zone=${data.id}`;
+      document.getElementById('modalRadarBtn').href = `slot-status.html`;
+
+      document.getElementById('modalFeaturesList').innerHTML = data.features.map(f => `
+        <span class="modal-feat-tag">${f}</span>
+      `).join('');
+
+      // Render thumbnail strip of all 4 parking lot locations
+      document.getElementById('modalThumbStrip').innerHTML = Object.values(LOCATION_DATA).map(z => `
+        <div class="strip-thumb ${z.id === activeModalZoneId ? 'active' : ''}" onclick="switchModalZone(${z.id})">
+          <img src="${z.image}" alt="${z.name}">
+          <span class="strip-thumb-label">${z.name.split(' ')[0]}</span>
         </div>
-        <div class="stat-row" aria-label="ParkEase highlights">
-          <div class="stat"><div class="n">4</div><div class="l">live zones</div></div>
-          <div class="stat"><div class="n">24/7</div><div class="l">access online</div></div>
-          <div class="stat"><div class="n">NPR</div><div class="l">local pricing</div></div>
-        </div>
-      </div>
-      <div class="hero-visual" aria-label="ParkEase live parking map preview">
-        <div class="map-topline"><span class="live-dot"></span> Live availability <span class="map-time">Updated just now</span></div>
-        <div class="map-card">
-          <div class="map-road road-a"></div>
-          <div class="map-road road-b"></div>
-          <div class="map-road road-c"></div>
-          <div class="map-label label-newroad">New Road <strong>12 free</strong></div>
-          <div class="map-label label-khusibu">Khusibu <strong>3 free</strong></div>
-          <div class="map-label label-baneshwor">Baneshwor <strong>27 free</strong></div>
-          <div class="map-label label-patan">Patan Durbar <strong>1 free</strong></div>
-          <div class="map-pin pin-one">P</div>
-          <div class="map-pin pin-two">P</div>
-          <div class="map-pin pin-three">P</div>
-        </div>
-        <div class="map-footer"><span>ParkEase zones</span><span class="map-legend"><i class="legend-free"></i> Spaces available</span></div>
-      </div>
-    </div>
-  </section>
+      `).join('');
+    }
 
-  <section class="payments">
-    <div class="wrap payments-inner">
-      <span>Easy local payments</span>
-      <div class="payment-list">
-        <span class="payment-chip"><i class="payment-dot khalti"></i>Khalti</span>
-        <span class="payment-chip"><i class="payment-dot esewa"></i>eSewa</span>
-        <span class="payment-chip"><i class="payment-dot qr"></i>QR payment</span>
-      </div>
-    </div>
-  </section>
+    // Quick zone selection utility
+    function selectQuickZone(zoneName) {
+      const select = document.getElementById('heroZoneSelect');
+      if (select) {
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value.includes(zoneName) || select.options[i].text.includes(zoneName)) {
+            select.selectedIndex = i;
+            break;
+          }
+        }
+      }
+    }
 
-  <section class="how-section" id="how-it-works">
-    <div class="wrap">
-      <div class="section-heading">
-        <div class="eyebrow">SIMPLE BY DESIGN</div>
-        <h2>Parking made easier for everyday Nepal.</h2>
-        <p>ParkEase keeps the process clear, quick, and useful whether you are parking for a quick errand or a full day in the city.</p>
-      </div>
-      <div class="how-grid">
-        <article class="how-card"><span class="how-number">01</span><h3>Check a zone</h3><p>See live spaces in familiar places like New Road, Baneshwor, Khusibu, and Patan.</p></article>
-        <article class="how-card"><span class="how-number">02</span><h3>Reserve your spot</h3><p>Choose your time and pay the local way with a simple, secure flow.</p></article>
-        <article class="how-card"><span class="how-number">03</span><h3>Park without stress</h3><p>Use your booking token at the entrance and get on with your day.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="closing" id="about">
-    <div class="wrap closing-inner">
-      <div class="eyebrow">READY TO START?</div>
-      <h2>Stop circling. Start parking.</h2>
-      <p>Find a better parking experience in Kathmandu Valley today.</p>
-      <div class="closing-actions">
-        <a href="driver-login.html" class="btn-primary">Start parking <span aria-hidden="true">→</span></a>
-        <a href="admin-login.html" class="btn-outline">Admin access</a>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="wrap footer-grid">
-    <div class="footer-brand">
-      <a class="logo" href="index.html"><span class="mark">P</span>ParkEase</a>
-      <p>Simple, reliable parking for drivers and properties across Nepal.</p>
-      <div class="social-row" aria-label="Social links"><a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">ig</a><a href="#" aria-label="LinkedIn">in</a></div>
-    </div>
-    <div class="footer-column"><h4>Product</h4><a href="driver-login.html">Find parking</a><a href="#how-it-works">How it works</a><a href="driver-login.html">User account</a></div>
-    <div class="footer-column"><h4>Company</h4><a href="#about">About ParkEase</a><a href="admin-login.html">Admin access</a><a href="mailto:hello@parkease-nepal.com">Contact</a></div>
-    <div class="footer-column"><h4>Legal</h4><a href="#">Terms &amp; Conditions</a><a href="#">Privacy Policy</a><a href="#">Security</a></div>
-  </div>
-  <div class="wrap footer-bottom"><span>© 2026 ParkEase Nepal</span><span>Built for easier city parking.</span></div>
-</footer>
-
-<script src="script.js"></script>
+    // Vehicle switcher
+    const vehicleButtons = document.querySelectorAll('#vehicleSwitch .vehicle-btn');
+    vehicleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        vehicleButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+# Ignore duplicate folder and archives
+Parkease 4P/
+Parkease 4P.zip
+*.zip

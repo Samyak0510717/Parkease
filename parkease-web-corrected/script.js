@@ -1,6 +1,14 @@
-document.getElementById('bookBtn').addEventListener('click', () => {
-  const zone = document.getElementById('zoneSelect').value.split(' — ')[0];
-  const durationText = document.getElementById('durationSelect').selectedOptions[0].text;
-  const result = document.getElementById('bookResult');
-  result.textContent = `✓ Slot reserved in ${zone} for ${durationText}. Confirmation token sent by SMS.`;
-});
+const bookBtn = document.getElementById('bookBtn');
+if (bookBtn) {
+  bookBtn.addEventListener('click', () => {
+    const zoneSelect = document.getElementById('zoneSelect');
+    const durationSelect = document.getElementById('durationSelect');
+    const result = document.getElementById('bookResult');
+    if (zoneSelect && durationSelect && result) {
+      const zone = zoneSelect.value.split(' — ')[0];
+      const durationText = durationSelect.selectedOptions[0].text;
+      result.textContent = `✓ Slot reserved in ${zone} for ${durationText}. Confirmation token sent to your Gmail.`;
+    }
+  });
+}
+

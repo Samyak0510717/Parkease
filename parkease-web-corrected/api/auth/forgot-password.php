@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../../db.php';
+require_once __DIR__ . '/../lib/gmail_otp.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -8,18 +9,56 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $body = read_json_body();
-$phone = preg_replace('/\D/', '', $body['phone'] ?? '');
+$email = strtolower(trim($body['email'] ?? ''));
+$code = trim($body['code'] ?? '');
+$newPassword = (string) ($body['new_password'] ?? '');
 
-if (!preg_match('/^(97|98)\d{8}$/', $phone)) {
+if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/@gmail\.com$/i', $email)) {
     http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Enter a valid 10-digit Nepali mobile number.']);
+    echo json_encode(['success' => false, 'message' => 'Enter a valid Gmail address.']);
     exit;
 }
 
-// Do not reveal whether a phone number exists. A production deployment can
-// connect this request to its approved support/SMS recovery provider.
-$stmt = $pdo->prepare("SELECT user_id FROM users WHERE phone = ? LIMIT 1");
-$stmt->execute([$phone]);
-$stmt->fetchColumn();
+if (empty($code)) {
+    http_response_code(422);
+    echo json_encode(['success' => false, 'message' => 'Enter the 6-digit Gmail OTP code.']);
+    exit;
+}
 
-echo json_encode(['success' => true, 'message' => 'If this number is linked to an account, ParkEase support will contact you with the next steps.']);
+if (strlen($newPassword) < 6) {
+    http_response_code(422);
+    echo json_encode(['success' => false, 'message' => 'New password must be at least 6 characters.']);
+    exit;
+}
+
+try {
+    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ? LIMIT 1");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+    if (!$user) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'No account found registered with this Gmail address.']);
+        exit;
+    }
+
+    $verified = verify_otp($pdo, $email, $code, 'reset_password');
+
+    if (!$verified) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Invalid or expired Gmail OTP code. Please check your Gmail or request a new code.']);
+        exit;
+    }
+
+    $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+    $updateStmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE user_id = ?");
+    $updateStmt->execute([$hash, $user['user_id']]);
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Password reset successfully! You can now log in with your new password.',
+    ]);
+} catch (Throwable $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Password reset failed. Please try again.']);
+}

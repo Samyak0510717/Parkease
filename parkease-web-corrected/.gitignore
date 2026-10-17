@@ -1,2 +1,5 @@
 .env
 *.log
+composer.phar
+api/slots.php
+api/slot-status.php

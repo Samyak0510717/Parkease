@@ -3,6 +3,14 @@
 CREATE DATABASE IF NOT EXISTS parkease CHARACTER SET utf8mb4;
 USE parkease;
 
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS slots;
+DROP TABLE IF EXISTS zones;
+DROP TABLE IF EXISTS rates;
+DROP TABLE IF EXISTS otp_codes;
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
   user_id       INT AUTO_INCREMENT PRIMARY KEY,
   phone         VARCHAR(15) NOT NULL UNIQUE,
@@ -12,6 +20,17 @@ CREATE TABLE users (
   password_hash VARCHAR(255) DEFAULT NULL,
   session_token VARCHAR(64) DEFAULT NULL,
   created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE otp_codes (
+  otp_id     INT AUTO_INCREMENT PRIMARY KEY,
+  email      VARCHAR(150) NOT NULL,
+  code       VARCHAR(6) NOT NULL,
+  purpose    ENUM('register','reset_password') NOT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX (email),
+  INDEX (code)
 );
 
 CREATE TABLE zones (
@@ -45,7 +64,7 @@ CREATE TABLE bookings (
 CREATE TABLE payments (
   payment_id INT AUTO_INCREMENT PRIMARY KEY,
   booking_id INT NOT NULL,
-  method     ENUM('khalti','esewa','cash') NOT NULL,
+  method     VARCHAR(32) NOT NULL DEFAULT 'counter',
   amount     DECIMAL(8,2) NOT NULL,
   status     ENUM('pending','paid','failed') NOT NULL DEFAULT 'pending',
   paid_at    DATETIME DEFAULT NULL,
@@ -93,3 +112,7 @@ INSERT INTO rates (duration_hours, label, amount) VALUES
   (2, '2 hours', 70.00),
   (4, '4 hours', 120.00),
   (24, 'Full day', 250.00);
+
+-- Seed default admin account (Email: admin@gmail.com / Password: admin123)
+INSERT INTO users (phone, email, name, role, password_hash) VALUES
+  ('9800000000', 'admin@gmail.com', 'ParkEase Admin', 'admin', '$2y$10$.OFIvglSQ.IYYu4u5c8ZXuj3MNMIiIAsGwaVnKIAEaMEPf4icMyfu');

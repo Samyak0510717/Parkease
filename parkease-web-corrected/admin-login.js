@@ -25,7 +25,8 @@ function clearBanner() {
   statusBanner.className = 'status-banner';
 }
 function isValidGmail(value) {
-  return /^[^\s@]+@gmail\.com$/i.test(value.trim());
+  const clean = value.trim().toLowerCase();
+  return clean === 'admin' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(clean);
 }
 function validate() {
   let valid = true;
